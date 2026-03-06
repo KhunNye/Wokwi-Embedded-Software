@@ -1,0 +1,107 @@
+Here is your **Zero-to-Hero Setup Guide** for Wokwi in VS Code.
+
+### Phase 1: The Toolchain Setup
+
+We are not just installing a simulator; we are building a professional development environment.
+
+1. **Install VS Code:** Download and install [Visual Studio Code](https://code.visualstudio.com/).
+2. **Install PlatformIO:**
+* Open VS Code.
+* Click the **Extensions** icon (blocks on the left).
+* Search for **"PlatformIO IDE"** (look for the alien head icon).
+* **Install it.** (This may take a few minutes to install the core toolchain).
+
+
+3. **Install Wokwi Simulator:**
+* In the Extensions tab, search for **"Wokwi Simulator"**.
+* **Install it.**
+* *Note:* You will need a license. Press `F1`, type `Wokwi: Request a New License`, and follow the prompts to get a free license from their website.
+
+
+
+---
+
+### Phase 2: Your First "Pro" Project
+
+We won't use the messy Arduino file structure. We will use **PlatformIO**, which manages libraries and board settings for you.
+
+#### Step 1: Create the Project
+
+1. Click the **PlatformIO logo** (Alien head) on the left sidebar.
+2. Click **"Create New Project"**.
+3. **Name:** `RTOS_Multitasking`
+4. **Board:** Type `DOIT ESP32 DEVKIT V1`.
+5. **Framework:** Select `Arduino`.
+6. Click **Finish**. (This takes a while the first time).
+
+#### Step 2: Configure Wokwi
+
+You need to tell Wokwi how to simulate this specific project.
+
+1. In your project file explorer (left side), right-click in the empty space and select **New File**. Name it `wokwi.toml`.
+2. Paste this configuration into `wokwi.toml`:
+```toml
+[wokwi]
+version = 1
+firmware = '.pio/build/esp32doit-devkit-v1/firmware.bin'
+elf = '.pio/build/esp32doit-devkit-v1/firmware.elf'
+
+```
+
+
+3. Create another new file named `diagram.json`. This is your virtual hardware.
+* *Tip:* The easiest way to generate this is to go to [wokwi.com](https://wokwi.com), create a new ESP32 project, add your LEDs/Buttons, and then copy the content of the `diagram.json` tab into your VS Code file.
+* **For now, paste this (Basic ESP32 setup):**
+
+
+```json
+{
+  "version": 1,
+  "author": "Future Engineer",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": -60, "left": 120, "attrs": { "color": "red" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:GND.1", "led1:C", "black", [ "v0" ] ],
+    [ "esp:2", "led1:A", "red", [ "v0" ] ]
+  ]
+}
+
+```
+
+
+
+#### Step 3: Write the Code
+
+1. Go to the `src` folder and open `main.cpp`.
+2. Delete everything and paste the **Multitasking Code** I gave you in the previous response.
+3. **Crucial Pro Step:** Because this is C++ (not just an Arduino sketch), you must add this line at the very top:
+```cpp
+#include <Arduino.h>
+
+```
+
+
+
+---
+
+### Phase 3: Launch!
+
+1. **Build:** Press the **Checkmark** (✓) icon in the bottom blue bar of VS Code. This compiles your code. Success means you have no syntax errors.
+2. **Simulate:** Open your `diagram.json` file.
+3. **Run:** At the top of the open diagram file, you will see a little "Play" button (or press `F1` and type `Wokwi: Start Simulator`).
+
+### Why is this better than the browser?
+
+* **IntelliSense:** Try typing `Serial.p`... VS Code will suggest `print`, `println`, etc. This speeds up coding 10x.
+* **Git:** You can now save your changes to GitHub to build a portfolio (recruiters love seeing `ESP32-RTOS-Project` on GitHub).
+* **No Internet Lag:** The compilation happens on your machine, not a cloud server.
+
+This video walks through the exact setup I just described if you get stuck on the menus:
+
+[ESP32 Simulation in VSCode Using Wokwi](https://www.youtube.com/watch?v=3WVz2XdadD0)
+*This tutorial visually demonstrates installing the Wokwi extension in VS Code and setting up the configuration files for an ESP32 project.*
